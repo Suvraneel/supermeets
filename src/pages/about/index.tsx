@@ -1,0 +1,89 @@
+import matchNFTs from "@/nfts/getMatchNFTs";
+import { NextPage } from "next";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { redis } from "@/utils/db";
+
+interface NFTData {
+  name: string;
+  cached_image_uri: string;
+  collection: {
+    address: string;
+  };
+}
+
+const About: NextPage = () => {
+  const [selectedCardsList, setSelectedCardsList] = useState<string[]>([]);
+
+  const { publicKey } = useWallet();
+
+  const [supportedTokenAddressesMetadata, setSupportedTokenAddressesMetadata] =
+    useState<NFTData[]>();
+
+  const handleCardSelect = (address: string) => {
+    if (selectedCardsList.includes(address)) {
+      setSelectedCardsList(
+        selectedCardsList.filter((item) => item !== address)
+      );
+    } else {
+      setSelectedCardsList([...selectedCardsList, address]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    for (const address of selectedCardsList) {
+      const value = (await redis.get(address)) as string[] | null;
+      if (value && publicKey) {
+        if (!value.includes(publicKey?.toBase58())) {
+          await redis.set(address, [...value, publicKey?.toBase58()]);
+        }
+      } else {
+        await redis.set(address, [publicKey?.toBase58()]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const getNFT = async () => {
+      console.log(publicKey?.toBase58());
+      const nfts = await matchNFTs(publicKey?.toBase58());
+      setSupportedTokenAddressesMetadata(nfts);
+    };
+    getNFT();
+  }, [publicKey]);
+
+  return (
+    <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap">
+      {supportedTokenAddressesMetadata &&
+        supportedTokenAddressesMetadata.map((item: NFTData) => {
+          return (
+            <div
+              key={item.collection.address}
+              className={`w-[25vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border ${
+                selectedCardsList.includes(item.collection.address)
+                  ? "border-red-500 border-4"
+                  : "border-cardGray-700 hover:border-gray-700"
+              } group overflow-clip`}
+              onClick={() => handleCardSelect(item.collection.address)}
+            >
+              <div className="relative w-full h-full">
+                <Image
+                  src={item.cached_image_uri}
+                  alt="Logo"
+                  loader={({ src }) => src}
+                  layout="fill"
+                  objectFit="cover"
+                  loading="lazy"
+                  className="group-hover:scale-110 transition-transform duration-75"
+                />
+              </div>
+            </div>
+          );
+        })}
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
+  );
+};
+
+export default About;
