@@ -5,10 +5,10 @@ const Spline = dynamic(() => import("@splinetool/react-spline"), {
     ssr: false,
 });
 
-const Spliner = () => {
+const Spliner = ({scene}:{scene:string}) => {
     return (
-        <div className='w-full h-11/12 absolute bg-transparent z-[-10] animate-float'>
-            <Spline scene="https://prod.spline.design/AijYrqJyqvWR6brq/scene.splinecode" />
+        <div className='w-full h-11/12 absolute bg-transparent z-[-10]'>
+            <Spline scene={scene} />
         </div>
     )
 }

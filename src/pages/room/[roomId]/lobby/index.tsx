@@ -16,6 +16,7 @@ import { useUpdateEffect } from "usehooks-ts";
 import { BasicIcons } from "@/components/BasicIcons";
 import SwitchDeviceMenu from "@/components/SwitchDeviceMenu";
 import Image from "next/image";
+import Spliner from "@components/Spliner";
 
 const Lobby = () => {
   const { initialize, me } = useHuddle01();
@@ -131,8 +132,9 @@ const Lobby = () => {
   }, [isRoomJoined, roomId]);
 
   return (
-    <main className="bg-lobby flex h-[80vh] flex-col items-center justify-center">
-      <div className="flex h-[35vh] w-[35vw] flex-col items-center justify-center gap-4">
+    <main className="bg-lobby flex h-[80vh] m-auto flex-col items-center justify-center">
+      <Spliner scene={"https://prod.spline.design/HwOQpQ03zXBOxnw5/scene.splinecode"}/>
+      <div className="flex h-[35vh] w-[35vw] flex-col items-center justify-center gap-4 mt-32">
         <div
           className="relative mx-auto flex w-fit items-center justify-center rounded-lg text-center border border-zinc-800 bg-transparent">
           <div className="flex h-[40vh] aspect-video items-center justify-center rounded-lg">

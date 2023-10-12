@@ -1,4 +1,3 @@
-"use client";
 import matchNFTs from "@/nfts/getMatchNFTs";
 import { NextPage } from "next";
 import Image from "next/image";
@@ -65,8 +64,7 @@ const About: NextPage = () => {
 
   return (
     <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap">
-      {supportedTokenAddressesMetadata &&
-        supportedTokenAddressesMetadata.map((item: NFTData) => {
+      {supportedTokenAddressesMetadata!.map((item: NFTData) => {
           return (
             <div
               key={item.collection.address}
