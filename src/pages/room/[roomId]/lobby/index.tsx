@@ -9,7 +9,7 @@ import {
   useRoom,
   useVideo,
 } from "@huddle01/react/hooks";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useUpdateEffect } from "usehooks-ts";
 

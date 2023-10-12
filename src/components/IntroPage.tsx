@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useHuddle01 } from "@huddle01/react";
 import { useLobby } from "@huddle01/react/hooks";
 

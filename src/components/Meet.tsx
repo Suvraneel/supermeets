@@ -11,7 +11,7 @@ import type { FC } from "react";
 import { useEffect, useRef } from "react";
 import { useMeetPersistStore } from "@/store/meet";
 import { useUpdateEffect } from "usehooks-ts";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router"
 
 import AudioElem from "./Audio";
 import { BasicIcons } from "./BasicIcons";
