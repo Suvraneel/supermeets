@@ -64,7 +64,7 @@ const About: NextPage = () => {
 
   return (
     <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap">
-      {supportedTokenAddressesMetadata!.map((item: NFTData) => {
+      {supportedTokenAddressesMetadata?.map((item: NFTData) => {
           return (
             <div
               key={item.collection.address}
