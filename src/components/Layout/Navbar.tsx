@@ -1,11 +1,15 @@
-import {
-  WalletMultiButton
-} from "@solana/wallet-adapter-react-ui";
 import Link from "next/link";
 import HamburgerMenu from "./HamburgerMenu";
+import dynamic from "next/dynamic";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
+
+const WalletMultiButtonDynamic = dynamic(
+  async () =>
+      (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
+  { ssr: false }
+);
 
 export default function Navbar() {
 
@@ -62,7 +66,7 @@ export default function Navbar() {
               ) : null}
             </div>
             <div className="flex justify-end md:w-1/3">
-              <WalletMultiButton />
+              <WalletMultiButtonDynamic />
             </div>
           </div>
         </nav>

@@ -17,9 +17,11 @@ import { BasicIcons } from "@/components/BasicIcons";
 import SwitchDeviceMenu from "@/components/SwitchDeviceMenu";
 import Image from "next/image";
 
-const Lobby = ({ params }: { params: { roomId: string } }) => {
+const Lobby = () => {
   const { initialize, me } = useHuddle01();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { query } = useRouter();
+  const { roomId: queryRoomId } = query;
   const { joinLobby, isLobbyJoined } = useLobby();
   const { joinRoom, isRoomJoined } = useRoom();
   const { fetchVideoStream, stopVideoStream, stream: camStream } = useVideo();
@@ -27,6 +29,7 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
   const { setDisplayName, changeAvatarUrl } = useAppUtils();
   const [displayUserName, setDisplayUserName] = useState<string>("");
   const [ isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [ roomId, setRoomId ] = useState<string>("");
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -42,10 +45,18 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
   const { push } = useRouter();
 
   useEffect(() => {
-    if (params.roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
+    if (queryRoomId) {
+      setRoomId(queryRoomId as string);
+    } else {
+      push("/");
+    }
+  }, [queryRoomId]);
+
+  useEffect(() => {
+    if (roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
       initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
     }
-  }, [params.roomId]);
+  }, [roomId]);
 
   useEffect(() => {
     if (camStream && videoRef.current) {
@@ -96,8 +107,8 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
   //   }, [changeAvatarUrl.isCallable]);
 
   useEffect(() => {
-    joinLobby(params.roomId);
-  }, []);
+    joinLobby(roomId);
+  }, [roomId]);
 
   useUpdateEffect(() => {
     if (!isCamOff) {
@@ -114,10 +125,10 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
   }, [audioInputDevice]);
 
   useEffect(() => {
-    if (isRoomJoined) {
-      push(`/room/${params.roomId}`);
+    if (isRoomJoined && roomId) {
+      push(`/room/${roomId}`);
     }
-  }, [isRoomJoined]);
+  }, [isRoomJoined, roomId]);
 
   return (
     <main className="bg-lobby flex h-[80vh] flex-col items-center justify-center">

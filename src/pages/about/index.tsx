@@ -1,9 +1,11 @@
+"use client";
 import matchNFTs from "@/nfts/getMatchNFTs";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { redis } from "@/utils/db";
+import { redis1, redis2 } from "@/utils/db";
+import createRoom from "@/huddle01/createRoom";
 
 interface NFTData {
   name: string;
@@ -32,15 +34,23 @@ const About: NextPage = () => {
   };
 
   const handleSubmit = async () => {
+    await mapRoomWithWallet();
     for (const address of selectedCardsList) {
-      const value = (await redis.get(address)) as string[] | null;
+      const value = (await redis1.get(address)) as string[] | null;
       if (value && publicKey) {
         if (!value.includes(publicKey?.toBase58())) {
-          await redis.set(address, [...value, publicKey?.toBase58()]);
+          await redis1.set(address, [...value, publicKey?.toBase58()]);
         }
       } else {
-        await redis.set(address, [publicKey?.toBase58()]);
+        await redis1.set(address, [publicKey?.toBase58()]);
       }
+    }
+  };
+
+  const mapRoomWithWallet = async () => {
+    const roomId = await createRoom();
+    if (roomId && publicKey) {
+      await redis2.set(publicKey?.toBase58(), roomId);
     }
   };
 
@@ -51,7 +61,7 @@ const About: NextPage = () => {
       setSupportedTokenAddressesMetadata(nfts);
     };
     getNFT();
-  }, [publicKey]);
+  }, []);
 
   return (
     <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap">
