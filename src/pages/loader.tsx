@@ -31,50 +31,77 @@ const Loader = () => {
     const preferredMatchNFT = await getPreferredMatchNFT(preferences);
     console.log("Preferred Match NFT Collection is", preferredMatchNFT);
     if (preferredMatchNFT) {
-      let value = (await redis1.get(preferredMatchNFT)) as string[] | null;
+      let isMatched = false;
+      let counter = 0;
 
-      console.log("The addresses in the pool", value);
+      const startMatching = async () => {
+        let value = (await redis1.get(preferredMatchNFT)) as string[] | null;
 
-      const availablePartners = value?.filter(
-        (item) => item !== publicKey?.toBase58()
-      );
+        console.log("The addresses in the pool", value);
 
-      if (availablePartners) {
-        const roomPartner = availablePartners[0];
-
-        setMatchedAddress(roomPartner);
-
-        console.log("we are matching with", roomPartner);
-
-        // put all the other addresses back in the pool
-
-        const restAddresses = availablePartners.slice(1);
-
-        await redis1.set(preferredMatchNFT, restAddresses);
-
-        console.log("The addresses in the pool after", restAddresses);
-
-        const roomId = await redis2.get(publicKey?.toBase58() as string);
-
-        await redis2.set(roomPartner, {
-          roomId: (roomId as RoomsInterface).roomId,
-          partner: publicKey?.toBase58(),
-        });
-
-        await redis2.set(publicKey?.toBase58() as string, {
-          roomId: (roomId as RoomsInterface).roomId,
-          partner: roomPartner,
-        });
-
-        const partnerRoomId = await redis2.get(roomPartner);
-        const myRoomId = await redis2.get(publicKey?.toBase58() as string);
-
-        push(
-          `/room/${((await redis2.get(roomPartner)) as RoomsInterface).roomId}`
+        const availablePartners = value?.filter(
+          (item) => item !== publicKey?.toBase58()
         );
+
+        if (availablePartners) {
+          const roomPartner = availablePartners[0];
+
+          if (roomPartner) {
+            isMatched = true;
+
+            setMatchedAddress(roomPartner);
+
+            console.log("we are matching with", roomPartner);
+
+            // put all the other addresses back in the pool
+
+            const restAddresses = availablePartners.slice(1);
+
+            await redis1.set(preferredMatchNFT, restAddresses);
+
+            console.log("The addresses in the pool after", restAddresses);
+
+            const roomId = await redis2.get(publicKey?.toBase58() as string);
+
+            await redis2.set(roomPartner, {
+              roomId: (roomId as RoomsInterface).roomId,
+              partner: publicKey?.toBase58(),
+            });
+
+            await redis2.set(publicKey?.toBase58() as string, {
+              roomId: (roomId as RoomsInterface).roomId,
+              partner: roomPartner,
+            });
+
+            const partnerRoomId = await redis2.get(roomPartner);
+            const myRoomId = await redis2.get(publicKey?.toBase58() as string);
+
+            push(
+              `/room/${
+                ((await redis2.get(roomPartner)) as RoomsInterface).roomId
+              }`
+            );
+          }
+        } else {
+          console.log("No available partners");
+        }
+      };
+
+      if (counter < 5) {
+        setInterval(() => {
+          if (!isMatched) {
+            startMatching();
+            counter++;
+            console.log(`Testing for ${counter} times`);
+          }
+        }, 5000);
+      } else {
+        alert("No available partners");
+        push("/");
       }
+
+      return matchedAddress;
     }
-    return matchedAddress;
   };
 
   useEffect(() => {
