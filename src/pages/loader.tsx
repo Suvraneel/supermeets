@@ -69,8 +69,9 @@ const Loader = () => {
         const partnerRoomId = await redis2.get(roomPartner);
         const myRoomId = await redis2.get(publicKey?.toBase58() as string);
 
-        console.log("Partner RoomId", partnerRoomId);
-        console.log("My RoomId", myRoomId);
+        push(
+          `/room/${((await redis2.get(roomPartner)) as RoomsInterface).roomId}`
+        );
       }
     }
     return matchedAddress;

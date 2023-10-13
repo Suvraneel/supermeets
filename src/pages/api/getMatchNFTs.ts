@@ -1,4 +1,3 @@
-import { writeFileSync } from "fs";
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 interface APIData {
@@ -36,12 +35,16 @@ const nftCommunityCollection = [
     CollectionName: "Claynosaurz",
     address: "6mszaj17KSfVqADrQj3o4W3zoLMTykgmV37W4QadCczK",
   },
+  {
+    CollectionName: "Number Degen NFTs",
+    address: "G3YSwhwL7yiKvkrnKgk1jQsQkRj5zcCSF8rfVAGQUpKe"
+  }
 ];
 
 const matchNFTs = async (req: NextApiRequest, res: NextApiResponse) => {
   const address = "2pgp7NaXWqycNJ7kaFF9uvs2MQ1hd3dG2Gh27VUUzxcA";
-  const { wallet_address } = req.body;
-  const url = "https://api.shyft.to/sol/v1/nft/read_all?network=mainnet-beta&address="+address;
+  const { walletAddress } = req.body;
+  const url = "https://api.shyft.to/sol/v1/nft/read_all?network=mainnet-beta&address="+walletAddress;
   const response = await fetch(url, {
     headers: {
       "X-API-KEY": process.env.SHYFT_API_KEY || "",
@@ -55,11 +58,15 @@ const matchNFTs = async (req: NextApiRequest, res: NextApiResponse) => {
     (nft) => nft.address
   );
 
-  const filteredNFTs = nfts?.filter((nft: NFTData) =>
+  let filteredNFTs = nfts?.filter((nft: NFTData) =>
     nftCommunityCollectionAddresses.includes(nft.collection.address)
   );
 
-  writeFileSync("./nfts.json", JSON.stringify(filteredNFTs));
+  //remove nfts with same collection address
+  filteredNFTs = filteredNFTs.filter(
+    (nft: NFTData, index: number, self: NFTData[]) =>
+      index === self.findIndex((t) => t.collection.address === nft.collection.address)
+  );
 
   if (!filteredNFTs) {
     return res.status(404).json({ message: "No NFTs found" });
