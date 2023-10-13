@@ -35,6 +35,15 @@ const Loader = () => {
       let counter = 0;
 
       const startMatching = async () => {
+        const checkIfRoomExists = (await redis2.get(
+          publicKey?.toBase58() as string
+        )) as RoomsInterface | null;
+
+        if (checkIfRoomExists?.partner !== null) {
+          push(`/room/${checkIfRoomExists?.roomId}`);
+          return;
+        }
+
         let value = (await redis1.get(preferredMatchNFT)) as string[] | null;
 
         console.log("The addresses in the pool", value);
