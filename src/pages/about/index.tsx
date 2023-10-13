@@ -61,6 +61,10 @@ const About: NextPage = () => {
   };
 
   useEffect(() => {
+    console.log(selectedCardsList);
+  }, [selectedCardsList]);
+
+  useEffect(() => {
     const getNFT = async () => {
       console.log(publicKey?.toBase58());
       const nfts = await fetch('/api/getMatchNFTs', {
