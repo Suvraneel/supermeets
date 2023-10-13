@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
 
+interface RoomsInterface {
+  roomId: string;
+  partner: string | null;
+}
+
 const Loader = () => {
   const [matchedAddress, setMatchedAddress] = useState("");
   const { publicKey } = useWallet();
@@ -37,6 +42,8 @@ const Loader = () => {
       if (availablePartners) {
         const roomPartner = availablePartners[0];
 
+        setMatchedAddress(roomPartner);
+
         console.log("we are matching with", roomPartner);
 
         // put all the other addresses back in the pool
@@ -50,16 +57,20 @@ const Loader = () => {
         const roomId = await redis2.get(publicKey?.toBase58() as string);
 
         await redis2.set(roomPartner, {
-          roomId: roomId,
+          roomId: (roomId as RoomsInterface).roomId,
           partner: publicKey?.toBase58(),
         });
 
         await redis2.set(publicKey?.toBase58() as string, {
-          roomId: roomId,
+          roomId: (roomId as RoomsInterface).roomId,
           partner: roomPartner,
         });
 
-        console.log("RoomId", roomId);
+        const partnerRoomId = await redis2.get(roomPartner);
+        const myRoomId = await redis2.get(publicKey?.toBase58() as string);
+
+        console.log("Partner RoomId", partnerRoomId);
+        console.log("My RoomId", myRoomId);
       }
     }
     return matchedAddress;
