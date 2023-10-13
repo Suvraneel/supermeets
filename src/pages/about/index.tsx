@@ -56,7 +56,10 @@ const About: NextPage = () => {
   const mapRoomWithWallet = async () => {
     const roomId = await createRoom();
     if (roomId && publicKey) {
-      await redis2.set(publicKey?.toBase58(), roomId);
+      await redis2.set(publicKey?.toBase58(), {
+        roomId: roomId,
+        partner: null,
+      });
     }
   };
 
@@ -72,30 +75,30 @@ const About: NextPage = () => {
   return (
     <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap">
       {supportedTokenAddressesMetadata?.map((item: NFTData) => {
-          return (
-            <div
-              key={item.collection.address}
-              className={`w-[25vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border ${
-                selectedCardsList.includes(item.collection.address)
-                  ? "border-red-500 border-4"
-                  : "border-cardGray-700 hover:border-gray-700"
-              } group overflow-clip`}
-              onClick={() => handleCardSelect(item.collection.address)}
-            >
-              <div className="relative w-full h-full">
-                <Image
-                  src={item.cached_image_uri}
-                  alt="Logo"
-                  loader={({ src }) => src}
-                  layout="fill"
-                  objectFit="cover"
-                  loading="lazy"
-                  className="group-hover:scale-110 transition-transform duration-75"
-                />
-              </div>
+        return (
+          <div
+            key={item.collection.address}
+            className={`w-[25vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border ${
+              selectedCardsList.includes(item.collection.address)
+                ? "border-red-500 border-4"
+                : "border-cardGray-700 hover:border-gray-700"
+            } group overflow-clip`}
+            onClick={() => handleCardSelect(item.collection.address)}
+          >
+            <div className="relative w-full h-full">
+              <Image
+                src={item.cached_image_uri}
+                alt="Logo"
+                loader={({ src }) => src}
+                layout="fill"
+                objectFit="cover"
+                loading="lazy"
+                className="group-hover:scale-110 transition-transform duration-75"
+              />
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
       <button onClick={handleSubmit}>Submit</button>
     </div>
   );
