@@ -1,3 +1,6 @@
+import { writeFileSync } from "fs";
+import type { NextApiRequest, NextApiResponse } from 'next'
+
 interface APIData {
   success: boolean;
   message: string;
@@ -35,13 +38,13 @@ const nftCommunityCollection = [
   },
 ];
 
-const matchNFTs = async (wallet_address?: string) => {
-  // const address = "BGfybQ2uFGPmCscCPAgJtBFXDWc5GNqzymSq3AAo6Nvi";
-  console.log(wallet_address);
-  const url = "https://api.shyft.to/sol/v1/nft/read_all?network=mainnet-beta&address="+wallet_address;
+const matchNFTs = async (req: NextApiRequest, res: NextApiResponse) => {
+  const address = "2pgp7NaXWqycNJ7kaFF9uvs2MQ1hd3dG2Gh27VUUzxcA";
+  const { wallet_address } = req.body;
+  const url = "https://api.shyft.to/sol/v1/nft/read_all?network=mainnet-beta&address="+address;
   const response = await fetch(url, {
     headers: {
-      "X-API-KEY": process.env.NEXT_PUBLIC_SHYFT_API_KEY || "",
+      "X-API-KEY": process.env.SHYFT_API_KEY || "",
     },
   });
   const data = (await response.json()) as APIData;
@@ -56,7 +59,12 @@ const matchNFTs = async (wallet_address?: string) => {
     nftCommunityCollectionAddresses.includes(nft.collection.address)
   );
 
-  return filteredNFTs || [];
+  writeFileSync("./nfts.json", JSON.stringify(filteredNFTs));
+
+  if (!filteredNFTs) {
+    return res.status(404).json({ message: "No NFTs found" });
+  };
+  return res.status(200).json(filteredNFTs);
 };
 
 export default matchNFTs;

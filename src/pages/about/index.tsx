@@ -1,4 +1,3 @@
-import matchNFTs from "@/nfts/getMatchNFTs";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -21,8 +20,6 @@ const About: NextPage = () => {
 
   const { push } = useRouter();
   const { publicKey } = useWallet();
-
-  const setPreferences = useMachingStore((state) => state.setPreferences);
 
   const [supportedTokenAddressesMetadata, setSupportedTokenAddressesMetadata] =
     useState<NFTData[]>();
@@ -66,7 +63,15 @@ const About: NextPage = () => {
   useEffect(() => {
     const getNFT = async () => {
       console.log(publicKey?.toBase58());
-      const nfts = await matchNFTs(publicKey?.toBase58());
+      const nfts = await fetch('/api/getMatchNFTs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          walletAddress: publicKey?.toBase58(),
+        }),
+      }).then((res) => res.json());
       setSupportedTokenAddressesMetadata(nfts);
     };
     getNFT();
