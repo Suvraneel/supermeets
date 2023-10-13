@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { redis1, redis2 } from "@/utils/db";
 import createRoom from "@/huddle01/createRoom";
+import { useMachingStore } from "@store/matching";
+import { useRouter } from "next/router";
 
 interface NFTData {
   name: string;
@@ -17,7 +19,10 @@ interface NFTData {
 const About: NextPage = () => {
   const [selectedCardsList, setSelectedCardsList] = useState<string[]>([]);
 
+  const { push } = useRouter();
   const { publicKey } = useWallet();
+
+  const setPreferences = useMachingStore((state) => state.setPreferences);
 
   const [supportedTokenAddressesMetadata, setSupportedTokenAddressesMetadata] =
     useState<NFTData[]>();
@@ -34,6 +39,7 @@ const About: NextPage = () => {
 
   const handleSubmit = async () => {
     await mapRoomWithWallet();
+    localStorage.setItem("preferences", JSON.stringify(selectedCardsList));
     for (const address of selectedCardsList) {
       const value = (await redis1.get(address)) as string[] | null;
       if (value && publicKey) {
@@ -44,6 +50,7 @@ const About: NextPage = () => {
         await redis1.set(address, [publicKey?.toBase58()]);
       }
     }
+    push("/loader");
   };
 
   const mapRoomWithWallet = async () => {
