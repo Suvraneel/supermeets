@@ -12,11 +12,18 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useUpdateEffect } from "usehooks-ts";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 import { BasicIcons } from "@/components/BasicIcons";
 import SwitchDeviceMenu from "@/components/SwitchDeviceMenu";
 import Image from "next/image";
 import Spliner from "@components/Spliner";
+import { redis2 } from "@utils/db";
+
+interface RoomsInterface {
+  roomId: string;
+  partner: string | null;
+}
 
 const Lobby = () => {
   const { initialize, me } = useHuddle01();
@@ -29,8 +36,9 @@ const Lobby = () => {
   const { fetchAudioStream, stopAudioStream, stream: micStream } = useAudio();
   const { setDisplayName, changeAvatarUrl } = useAppUtils();
   const [displayUserName, setDisplayUserName] = useState<string>("");
-  const [ isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [ roomId, setRoomId ] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [roomId, setRoomId] = useState<string>("");
+  const { publicKey } = useWallet();
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -49,8 +57,22 @@ const Lobby = () => {
     }
   }, [queryRoomId]);
 
+  const verifyRoomId = async (roomId: string) => {
+    if (publicKey?.toBase58()) {
+      const roomIdData = (
+        (await redis2.get(publicKey?.toBase58())) as RoomsInterface
+      )
+      if (!roomIdData) {
+        push("/");
+      }
+    }
+  };
+
   useEffect(() => {
     if (roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
+      async () => {
+        await verifyRoomId(roomId);
+      }
       initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
       joinLobby(roomId);
     }
@@ -126,10 +148,11 @@ const Lobby = () => {
 
   return (
     <main className="bg-lobby flex h-[80vh] m-auto flex-col items-center justify-center">
-      <Spliner scene={"https://prod.spline.design/HwOQpQ03zXBOxnw5/scene.splinecode"}/>
+      <Spliner
+        scene={"https://prod.spline.design/HwOQpQ03zXBOxnw5/scene.splinecode"}
+      />
       <div className="flex h-[35vh] w-[35vw] flex-col items-center justify-center gap-4 mt-32">
-        <div
-          className="relative mx-auto flex w-fit items-center justify-center rounded-lg text-center border border-zinc-800 bg-transparent">
+        <div className="relative mx-auto flex w-fit items-center justify-center rounded-lg text-center border border-zinc-800 bg-transparent">
           <div className="flex h-[40vh] aspect-video items-center justify-center rounded-lg">
             {camStream ? (
               <video
@@ -141,20 +164,27 @@ const Lobby = () => {
             ) : (
               <div className="h-full w-full flex flex-col gap-4 justify-center items-center">
                 <Image
-                  src={me.avatarUrl ? `${me.avatarUrl}` : `/icons/default-avatar.svg`}
+                  src={
+                    me.avatarUrl
+                      ? `${me.avatarUrl}`
+                      : `/icons/default-avatar.svg`
+                  }
                   alt="avatar"
                   width={100}
                   height={100}
                   className="h-24 w-24 rounded-full"
                 />
-                <h3 className="text-2xl font-bold text-white">{displayUserName.split(' ', 3).map(part => part.charAt(0).toUpperCase()).join('')}</h3>
+                <h3 className="text-2xl font-bold text-white">
+                  {displayUserName
+                    .split(" ", 3)
+                    .map((part) => part.charAt(0).toUpperCase())
+                    .join("")}
+                </h3>
               </div>
             )}
           </div>
         </div>
-        <div
-          className="flex bg-brand-900 items-center justify-center self-stretch rounded-lg py-2"
-        >
+        <div className="flex bg-brand-900 items-center justify-center self-stretch rounded-lg py-2">
           <div className="flex w-full flex-row items-center justify-between">
             <div className="flex w-full flex-row items-center justify-start gap-3">
               {!micStream ? (
@@ -173,7 +203,8 @@ const Lobby = () => {
                   onClick={() => {
                     stopAudioStream();
                   }}
-                  className="flex bg-gray-800 hover:bg-white/20 h-10 w-10 items-center justify-center rounded-xl">
+                  className="flex bg-gray-800 hover:bg-white/20 h-10 w-10 items-center justify-center rounded-xl"
+                >
                   {BasicIcons.active["mic"]}
                 </button>
               )}
@@ -191,7 +222,8 @@ const Lobby = () => {
                 <button
                   type="button"
                   onClick={stopVideoStream}
-                  className="flex bg-gray-800 hover:bg-white/20 h-10 w-10 items-center justify-center rounded-xl">
+                  className="flex bg-gray-800 hover:bg-white/20 h-10 w-10 items-center justify-center rounded-xl"
+                >
                   {BasicIcons.active["cam"]}
                 </button>
               )}
@@ -202,12 +234,8 @@ const Lobby = () => {
         <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
           <div className="flex w-2/3 h-full items-center">
             <div className="flex w-full flex-col justify-center gap-1 relative">
-              <div
-                className="w-full text-slate-300 flex items-center rounded-[10px] border border-zinc-800 pl-2 backdrop-blur-[400px]"
-              >
-                <div className="mr-2">
-                  {BasicIcons.person}
-                </div>
+              <div className="w-full text-slate-300 flex items-center rounded-[10px] border border-zinc-800 pl-2 backdrop-blur-[400px]">
+                <div className="mr-2">{BasicIcons.person}</div>
                 <input
                   type="text"
                   placeholder="Enter your display name"
@@ -220,7 +248,10 @@ const Lobby = () => {
                 </div>
               </div>
               <div
-              className={`${isDropdownOpen ? "block" : "hidden"} absolute top-full right-0 w-1/2 shadow-lg rounded-md bg-white/10 text-neutral-100 placeholder-neutral-600 placeholder:font-medium`}>
+                className={`${
+                  isDropdownOpen ? "block" : "hidden"
+                } absolute top-full right-0 w-1/2 shadow-lg rounded-md bg-white/10 text-neutral-100 placeholder-neutral-600 placeholder:font-medium`}
+              >
                 <ul className="w-full">
                   <li
                     className="w-full px-5 hover:bg-brandPurple-dark rounded-t-md py-0.5"
