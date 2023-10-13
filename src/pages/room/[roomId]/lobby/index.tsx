@@ -21,7 +21,7 @@ import Spliner from "@components/Spliner";
 const Lobby = () => {
   const { initialize, me } = useHuddle01();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const { roomId: queryRoomId } = query;
   const { joinLobby, isLobbyJoined } = useLobby();
   const { joinRoom, isRoomJoined } = useRoom();
@@ -43,19 +43,16 @@ const Lobby = () => {
     audioInputDevice,
   } = useMeetPersistStore();
 
-  const { push } = useRouter();
-
   useEffect(() => {
     if (queryRoomId) {
       setRoomId(queryRoomId as string);
-    } else {
-      push("/");
     }
   }, [queryRoomId]);
 
   useEffect(() => {
     if (roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
       initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
+      joinLobby(roomId);
     }
   }, [roomId]);
 
@@ -106,10 +103,6 @@ const Lobby = () => {
   //       console.log("Not Found");
   //     }
   //   }, [changeAvatarUrl.isCallable]);
-
-  useEffect(() => {
-    joinLobby(roomId);
-  }, [roomId]);
 
   useUpdateEffect(() => {
     if (!isCamOff) {
