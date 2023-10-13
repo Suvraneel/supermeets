@@ -7,7 +7,7 @@ const Spline = dynamic(() => import("@splinetool/react-spline"), {
 
 const Spliner = ({scene}:{scene:string}) => {
     return (
-        <div className='w-full h-11/12 absolute bg-transparent z-[-10]'>
+        <div className='w-full h-11/12 absolute bg-transparent -z-10'>
             <Spline scene={scene} />
         </div>
     )

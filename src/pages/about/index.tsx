@@ -17,7 +17,9 @@ interface NFTData {
 
 const About: NextPage = () => {
   const [selectedCardsList, setSelectedCardsList] = useState<string[]>([]);
-
+  useEffect(() => {
+    console.log(selectedCardsList);
+  }, [selectedCardsList]);
   const { push } = useRouter();
   const { publicKey } = useWallet();
 
@@ -78,7 +80,7 @@ const About: NextPage = () => {
   }, []);
 
   return (
-    <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap">
+    <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap pt-20">
       {supportedTokenAddressesMetadata?.map((item: NFTData) => {
         return (
           <div
