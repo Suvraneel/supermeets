@@ -13,6 +13,8 @@ interface MeetPersistState {
   toggleCamOff: (isCamOff: boolean) => void;
   avatarUrl: string;
   setAvatarUrl: (avatarUrl: string) => void;
+  displayName: string;
+  setDisplayName: (displayName: string) => void;
 }
 
 export const useMeetPersistStore = create<MeetPersistState>((set) => ({
@@ -29,4 +31,6 @@ export const useMeetPersistStore = create<MeetPersistState>((set) => ({
   toggleCamOff: (isCamOff) => set(() => ({ isCamOff })),
   avatarUrl: '',
   setAvatarUrl: (avatarUrl) => set(() => ({ avatarUrl })),
+  displayName: '',
+  setDisplayName: (displayName) => set(() => ({ displayName })),
 }));
