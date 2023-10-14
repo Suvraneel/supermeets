@@ -47,11 +47,12 @@ const Meet: FC = () => {
   } = useMeetPersistStore();
   const { peers } = usePeers();
   const { me } = useHuddle01();
-  const { changeAvatarUrl } = useAppUtils();
+  const { changeAvatarUrl, setDisplayName } = useAppUtils();
 
   const { push } = useRouter();
 
   const avatarUrl = useMeetPersistStore((state) => state.avatarUrl);
+  const displayUserName = useMeetPersistStore((state) => state.displayName);
 
   useEventListener("app:cam-on", async () => {
     toggleCamOff(false);
@@ -123,6 +124,12 @@ const Meet: FC = () => {
     }
   }, [changeAvatarUrl.isCallable, avatarUrl]);
 
+  useEffect(() => {
+    if (setDisplayName.isCallable && displayUserName) {
+      setDisplayName(displayUserName);
+    }
+  }, [setDisplayName.isCallable]);
+
   useEventListener("room:me-left", () => {
     push(`/`);
   })
@@ -151,7 +158,7 @@ const Meet: FC = () => {
               <div className="h-full w-full flex flex-col justify-center items-center">
               <Image
                 src={
-                  me.avatarUrl ? `${me.avatarUrl}` : `/icons/default-avatar.svg`
+                  me.avatarUrl ? `${me.avatarUrl}` : `/default-avatar.svg`
                 }
                 width={100}
                 height={100}
@@ -181,7 +188,7 @@ const Meet: FC = () => {
                   <Image
                     key={peerId}
                     src={
-                      '/icons/default-avatar.svg'
+                      '/default-avatar.svg'
                     }
                     width={100}
                     height={100}

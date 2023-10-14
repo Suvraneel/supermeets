@@ -1,11 +1,14 @@
 import Card from "@components/Card"
 import { swera } from "@fonts"
 import Image from "next/image"
-import { cardsContent } from "@api/cardContent"
 import Spliner from "@components/Spliner"
 import { ArrowRightIcon } from "@heroicons/react/24/outline"
+import { useRouter } from "next/router"
 
 export default function Home() {
+
+  const { push } = useRouter();
+
   return (
     <main>
       <Spliner scene={"https://prod.spline.design/TmLa-bcpmxHw90XL/scene.splinecode"}/>
@@ -16,21 +19,12 @@ export default function Home() {
       </div>
       <button
             type="button"
+            onClick={() => push("/preference")}
             className="flex w-40 items-center justify-center rounded-md py-3 text-slate-100 font-semibold bg-blue-600 group hover:bg-blue-900"
           >
             Start Meeting
             <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform" />
           </button>
-      {/* <div className="w-full h-full flex flex-col gap-4">
-        <div className="w-full h-full flex flex-row flex-wrap md:flex-nowrap gap-8 justify-between">
-          <Card content={cardsContent[0]} />
-          <Card content={cardsContent[1]} />
-          </div>
-        <div className="w-full h-full flex flex-row flex-wrap md:flex-nowrap gap-8 justify-between">
-          <Card content={cardsContent[2]} />
-          <Card content={cardsContent[3]} />
-        </div>
-      </div> */}
           </div>
     </main>
   )

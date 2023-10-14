@@ -34,8 +34,6 @@ const Lobby = () => {
   const { joinRoom, isRoomJoined } = useRoom();
   const { fetchVideoStream, stopVideoStream, stream: camStream } = useVideo();
   const { fetchAudioStream, stopAudioStream, stream: micStream } = useAudio();
-  const { setDisplayName, changeAvatarUrl } = useAppUtils();
-  const [displayUserName, setDisplayUserName] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [roomId, setRoomId] = useState<string>("");
   const { publicKey } = useWallet();
@@ -52,6 +50,8 @@ const Lobby = () => {
   } = useMeetPersistStore();
 
   const avatarURL = useMeetPersistStore((state) => state.avatarUrl);
+  const displayUserName = useMeetPersistStore((state) => state.displayName);
+  const setDisplayName = useMeetPersistStore((state) => state.setDisplayName);
 
   useEffect(() => {
     if (queryRoomId) {
@@ -103,10 +103,6 @@ const Lobby = () => {
   useEventListener("app:mic-off", async () => {
     toggleMicMuted(true);
   });
-
-  useEffect(() => {
-    setDisplayName(displayUserName);
-  }, [setDisplayName.isCallable]);
 
   //   useEffect(() => {
   //     const profilePicture = currentProfile?.picture;
@@ -244,7 +240,7 @@ const Lobby = () => {
                   placeholder="Enter your display name"
                   className="flex-1 rounded-lg border-transparent bg-transparent py-3 outline-none focus-within:outline-none hover:outline-none focus:border-transparent focus:outline-none"
                   value={displayUserName}
-                  onChange={(e) => setDisplayUserName(e.target.value)}
+                  onChange={(e) => setDisplayName(e.target.value)}
                 />
                 <div className="mr-2" onClick={toggleDropdown}>
                   {BasicIcons.configure}
