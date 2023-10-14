@@ -51,6 +51,8 @@ const Lobby = () => {
     audioInputDevice,
   } = useMeetPersistStore();
 
+  const avatarURL = useMeetPersistStore((state) => state.avatarUrl);
+
   useEffect(() => {
     if (queryRoomId) {
       setRoomId(queryRoomId as string);
@@ -167,7 +169,7 @@ const Lobby = () => {
                   src={
                     me.avatarUrl
                       ? `${me.avatarUrl}`
-                      : `/icons/default-avatar.svg`
+                      : `${avatarURL}`
                   }
                   alt="avatar"
                   width={100}

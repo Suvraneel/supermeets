@@ -23,6 +23,7 @@ const About: NextPage = () => {
   const { push } = useRouter();
   const { publicKey } = useWallet();
   const addPreference = useMachingStore((state) => state.addPreference);
+  const preferences = useMachingStore((state) => state.preferences);
 
   const [supportedTokenAddressesMetadata, setSupportedTokenAddressesMetadata] =
     useState<NFTData[]>();
@@ -64,8 +65,8 @@ const About: NextPage = () => {
   };
 
   useEffect(() => {
-    console.log(selectedCardsList);
-  }, [selectedCardsList]);
+    console.log(preferences);
+  }, [selectedCardsList, preferences]);
 
   useEffect(() => {
     const getNFT = async () => {
