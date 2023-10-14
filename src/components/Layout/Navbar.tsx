@@ -1,6 +1,7 @@
 import Link from "next/link";
 import HamburgerMenu from "./HamburgerMenu";
 import dynamic from "next/dynamic";
+import LogoSquare from "@components/LogoSquare";
 
 // Default styles that can be overridden by your app
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -14,26 +15,26 @@ const WalletMultiButtonDynamic = dynamic(
 export default function Navbar() {
 
   const menu = [
-    {
-      title: "Home",
-      path: "/",
-    },
-    {
-      title: "About",
-      path: "/about",
-    },
-    {
-      title: "Room",
-      path: "/room",
-    },
-    {
-      title: "Lobby",
-      path: "/lobby",
-    },
-    {
-      title: "ItsAMatch",
-      path: "/itsamatch",
-    },
+    // {
+    //   title: "Home",
+    //   path: "/",
+    // },
+    // {
+    //   title: "About",
+    //   path: "/about",
+    // },
+    // {
+    //   title: "Room",
+    //   path: "/room",
+    // },
+    // {
+    //   title: "Lobby",
+    //   path: "/lobby",
+    // },
+    // {
+    //   title: "ItsAMatch",
+    //   path: "/itsamatch",
+    // },
   ];
 
   return (
@@ -46,15 +47,15 @@ export default function Navbar() {
           <div className="flex w-full md:w-1/3">
             <Link
               href="/"
-              className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
+              className="mr-2 flex flex-row w-full items-center justify-center md:w-auto lg:mr-6 divide-x"
             >
-              {/* <LogoSquare /> */}
-              <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
+              <LogoSquare className='w-5 h-5 relative p-2'/>
+              <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block p-2">
                 {/* {process.env.SITE_NAME} */}
-                Web3-Omegle
+                SuperMeet
               </div>
             </Link>
-            {menu.length ? (
+            {menu.length!=0 && (
               <ul className="hidden gap-6 text-sm md:flex md:items-center">
                 {menu.map((item) => (
                   <li key={item.title}>
@@ -67,7 +68,7 @@ export default function Navbar() {
                   </li>
                 ))}
               </ul>
-            ) : null}
+            )}
           </div>
           <div className="flex justify-end md:w-1/3">
             <WalletMultiButtonDynamic />
