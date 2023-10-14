@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { BasicIcons } from './BasicIcons';
 import DropDownMenu from './DropDownMenu';
+import Modal from './Modal';
 
 const SwitchDeviceMenu: FC = () => {
   const { resolvedTheme } = useTheme();
@@ -15,14 +16,13 @@ const SwitchDeviceMenu: FC = () => {
   return (
     <>
       <button
+        type='button'
+        title='switch_device'
         onClick={() => setShowSettings(!showSettings)}
-        className={clsx(
-          'flex h-10 w-10 items-center hover:bg-white/20 justify-center rounded-xl'
-        )}
-      >
+        className='flex h-10 w-10 items-center hover:bg-white/20 justify-center rounded-xl'>
         <AdjustmentsHorizontalIcon className="text-brand-500 flex h-6 w-6 items-center justify-center rounded-xl" />
       </button>
-      {/* <Modal show={showSettings} onClose={() => setShowSettings(false)}>
+      <Modal show={showSettings} onClose={() => setShowSettings(false)}>
         <div
           className={clsx(
             resolvedTheme == 'dark' ? 'bg-gray-900' : 'bg-brand-100',
@@ -30,25 +30,31 @@ const SwitchDeviceMenu: FC = () => {
           )}
         >
           <div className="flex items-center gap-2 self-stretch text-slate-500">
-            {BasicIcons.active['cam']}
-            <div className="flex h-[2.75rem] items-center justify-between self-stretch">
+            <div className='w-10 h-fit flex justify-start items-center text-white'>
+              {BasicIcons.active['cam']}
+            </div>
+            <div className="flex h-fit items-center justify-between self-stretch">
               <DropDownMenu deviceType={'video'} />
             </div>
           </div>
           <div className="mt-5 flex items-center gap-2 self-stretch text-slate-500">
-            {BasicIcons.active['mic']}
-            <div className="flex h-[2.75rem] items-center justify-between self-stretch">
+            <div className='w-10 h-fit flex justify-start items-center'>
+              {BasicIcons.active['mic']}
+            </div>
+            <div className="flex h-fit items-center justify-between self-stretch">
               <DropDownMenu deviceType={'audioInput'} />
             </div>
           </div>
           <div className="mt-5 flex items-center gap-2 self-stretch text-slate-500">
-            {BasicIcons.speaker}
-            <div className="flex h-[2.75rem] items-center justify-between self-stretch">
+            <div className='w-10 h-fit flex justify-start items-center'>
+              {BasicIcons.speaker}
+            </div>
+            <div className="flex h-fit items-center justify-between self-stretch">
               <DropDownMenu deviceType={'audioOutput'} />
             </div>
           </div>
         </div>
-      </Modal> */}
+      </Modal>
     </>
   );
 };

@@ -13,17 +13,13 @@ const DeviceList: FC<DeviceListProps> = ({ devices, setDevice }) => {
   const { resolvedTheme } = useTheme();
 
   return (
-    <>
+    <div className="overflow-clip w-full h-full">
       {devices.map((device) => (
         <Menu.Item key={device.deviceId}>
           {({ active }) => (
             <button
-              className={clsx(
-                'flex h-full w-full justify-start rounded-lg px-4 py-2 text-sm ',
-                !active
-                  ? 'text-slate-500'
-                  : 'bg-black text-slate-100'
-              )}
+              type='button'
+              className={`w-full h-full flex justify-start items-center px-4 py-2 text-sm ${!active? 'text-slate-300':'bg-white/20 text-white'}`}
               key={device.deviceId}
               onClick={() => {
                 setDevice(device);
@@ -34,7 +30,7 @@ const DeviceList: FC<DeviceListProps> = ({ devices, setDevice }) => {
           )}
         </Menu.Item>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -68,11 +68,11 @@ const DropDownMenu: FC<DropDownProps> = ({ deviceType }) => {
   }, []);
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="w-full h-full relative inline-block text-left">
       <div>
         <Menu.Button
           className={clsx(
-            'inline-flex bg-gray-900 text-slate-500 w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset'
+            'w-full h-full inline-flex bg-gray-950 text-gray-300 justify-start gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset'
           )}
         >
           {deviceType == 'video'
@@ -81,7 +81,7 @@ const DropDownMenu: FC<DropDownProps> = ({ deviceType }) => {
             ? audioInputDevice?.label
             : audioOutputDevice?.label}
           <ChevronDownIcon
-            className="-mr-1 h-5 w-5 text-slate-500"
+            className="-mr-1 h-5 w-5 text-white"
             aria-hidden="true"
           />
         </Menu.Button>
@@ -98,10 +98,10 @@ const DropDownMenu: FC<DropDownProps> = ({ deviceType }) => {
       >
         <Menu.Items
           className={clsx(
-            'absolute right-0 z-10 mt-2 bg-gray-900 w-full origin-top-right rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+            'absolute right-0 z-10 mt-2 bg-gray-950 w-full origin-top-right rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
           )}
         >
-          <div className="">
+          <div className="w-full h-full">
             {deviceType === 'video' && (
               <DeviceList
                 devices={videoDevices}

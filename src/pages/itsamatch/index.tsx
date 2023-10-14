@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from '@heroicons/react/24/solid';
-import React from 'react'
+import Image from 'next/image';
+import styles from './itsamatch.module.css';
 
 const ItsAMatch = () => {
   return (
@@ -7,10 +8,23 @@ const ItsAMatch = () => {
       <div className='w-[50vw] h-[70vh] rounded-lg'>
         <div className='w-full h-full bg-black rounded-md flex flex-col items-center justify-evenly'>
           <h1 className='text-white text-3xl font-bold'>It&apos;s a Match!</h1>
-          <div className="flex justify-evenly items-center w-full h-full">
-            <img src="/guy.jpg" alt="itsamatch" className='w-full h-96 object-contain rounded-full' />
-            <h1 className='text-8xl font-thin'>X</h1>
-            <img src="/gril.jpg" alt="itsamatch" className='w-full h-96 object-contain rounded-full' />
+          <div className="flex justify-evenly items-center w-full h-full relative">
+            <div className="w-1/3 h-96 relative">
+              <Image
+                src="/guy.jpg"
+                alt="itsamatch"
+                fill
+                className={`rounded-full ${styles.animate_left_to_center} bg-contain`}              />
+            </div>
+            <h1 className={`text-8xl font-thin ${styles.stamp}`}>X</h1>
+            <div className="w-1/3 h-96 relative">
+              <Image
+                src="/gril.jpg"
+                alt="itsamatch"
+                fill
+                className={`rounded-full ${styles.animate_right_to_center} bg-contain`}
+              />
+            </div>
           </div>
           <button
             type="button"
