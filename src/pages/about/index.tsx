@@ -1,11 +1,12 @@
+import createRoom from "@/huddle01/createRoom";
+import { redis1, redis2 } from "@/utils/db";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useMachingStore } from "@store/matching";
 import { NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { redis1, redis2 } from "@/utils/db";
-import createRoom from "@/huddle01/createRoom";
 import { useRouter } from "next/router";
-import { useMachingStore } from "@store/matching";
+import { useEffect, useState } from "react";
 
 interface NFTData {
   name: string;
@@ -82,42 +83,49 @@ const About: NextPage = () => {
       setSupportedTokenAddressesMetadata(nfts);
     };
     getNFT();
-  }, []);
+  }, [publicKey]);
 
   return (
-    <div className="w-full h-full p-10 lg:px-40 flex justify-evenly flex-wrap pt-20">
-      {supportedTokenAddressesMetadata?.map((item: NFTData) => {
-        return (
-          <div
-            key={item.collection.address}
-            className={`w-[25vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border ${
-              selectedCardsList.includes(item.collection.address)
-                ? "border-red-500 border-4"
+    <div className='w-full h-full flex flex-col justify-evenly items-center'>
+      <div className="w-full h-full p-10 lg:px-40 flex justify-between items-center pt-32">
+        {supportedTokenAddressesMetadata?.map((item: NFTData) => {
+          return (
+            <div
+              key={item.collection.address}
+              className={`w-[20vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border transition-all ${selectedCardsList.includes(item.collection.address)
+                ? "border-blue-500 border-4 skew-x-6 -skew-y-3 shadow-2xl shadow-blue-700"
                 : "border-cardGray-700 hover:border-gray-700"
-            } group overflow-clip`}
-            onClick={() => {
-              handleCardSelect(item.collection.address)
-              addPreference({
-                address: item.collection.address,
-                imageUri: item.cached_image_uri,
-              })
-            }}
-          >
-            <div className="relative w-full h-full">
-              <Image
-                src={item.cached_image_uri}
-                alt="Logo"
-                loader={({ src }) => src}
-                layout="fill"
-                objectFit="cover"
-                loading="lazy"
-                className="group-hover:scale-110 transition-transform duration-75"
-              />
+                } group bg-white p-2 pb-5`}
+              onClick={() => {
+                handleCardSelect(item.collection.address)
+                addPreference({
+                  address: item.collection.address,
+                  imageUri: item.cached_image_uri,
+                })
+              }}
+            >
+              <div className="relative w-full h-full overflow-clip">
+                <Image
+                  src={item.cached_image_uri}
+                  alt="Logo"
+                  loader={({ src }) => src}
+                  fill
+                  loading="lazy"
+                  className="group-hover:scale-125 transition-transform duration-75 object-cover"
+                />
+              </div>
             </div>
-          </div>
-        );
-      })}
-      <button onClick={handleSubmit}>Submit</button>
+          );
+        })}
+      </div>
+      <button
+        type="button"
+        className="flex w-40 items-center justify-center rounded-md py-3 text-slate-100 font-semibold bg-blue-600 group hover:bg-blue-900"
+        onClick={handleSubmit}
+      >
+        Start Searching
+        <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform" />
+      </button>
     </div>
   );
 };
