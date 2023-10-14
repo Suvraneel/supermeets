@@ -11,6 +11,8 @@ interface MeetPersistState {
   toggleMicMuted: (isMicMuted: boolean) => void;
   isCamOff: boolean;
   toggleCamOff: (isCamOff: boolean) => void;
+  avatarUrl: string;
+  setAvatarUrl: (avatarUrl: string) => void;
 }
 
 export const useMeetPersistStore = create<MeetPersistState>((set) => ({
@@ -24,5 +26,7 @@ export const useMeetPersistStore = create<MeetPersistState>((set) => ({
   isMicMuted: true,
   toggleMicMuted: (isMicMuted) => set(() => ({ isMicMuted })),
   isCamOff: true,
-  toggleCamOff: (isCamOff) => set(() => ({ isCamOff }))
+  toggleCamOff: (isCamOff) => set(() => ({ isCamOff })),
+  avatarUrl: '',
+  setAvatarUrl: (avatarUrl) => set(() => ({ avatarUrl })),
 }));

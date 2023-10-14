@@ -1,8 +1,9 @@
-import { useMachingStore } from "@store/matching";
 import { redis1, redis2 } from "@utils/db";
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/router";
+import { useMachingStore } from "@store/matching";
+import { useMeetPersistStore } from "@store/meet";
 
 interface RoomsInterface {
   roomId: string;
@@ -13,6 +14,8 @@ const Loader = () => {
   const [matchedAddress, setMatchedAddress] = useState("");
   const { publicKey } = useWallet();
   const { push } = useRouter();
+  const setAvatarUrl = useMeetPersistStore((state) => state.setAvatarUrl);
+  const selectedPreferences = useMachingStore((state) => state.preferences);
 
   const getPreferredMatchNFT = async (preferences: string[]) => {
     let maxPreference: string | null = null;
@@ -29,11 +32,15 @@ const Loader = () => {
 
   const getMatchedAddress = async (preferences: string[]) => {
     const preferredMatchNFT = await getPreferredMatchNFT(preferences);
+    // find imageUrl of the preferredMatchNFT from preferences
+    const imageUrl = selectedPreferences.find((item) => item.address === preferredMatchNFT)?.imageUri;
+    if (imageUrl) {
+      setAvatarUrl(imageUrl);
+    }
     console.log("Preferred Match NFT Collection is", preferredMatchNFT);
     if (preferredMatchNFT) {
       let isMatched = false;
       let counter = 0;
-
       const startMatching = async () => {
         const checkIfRoomExists = (await redis2.get(
           publicKey?.toBase58() as string
@@ -57,6 +64,7 @@ const Loader = () => {
 
           if (roomPartner) {
             isMatched = true;
+
 
             setMatchedAddress(roomPartner);
 

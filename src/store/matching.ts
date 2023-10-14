@@ -1,11 +1,20 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+
+interface PreferenceNFT {
+  imageUri: string;
+  address: string;
+}
 
 interface MatchingState {
-    preferences: string[];   
-    setPreferences: (preferences: string[]) => void;
+  preferences: PreferenceNFT[];
+  setPreferences: (preferences: PreferenceNFT[]) => void;
+  addPreference: (preference: PreferenceNFT) => void;
 }
 
 export const useMachingStore = create<MatchingState>((set) => ({
-    preferences: [],
-    setPreferences: (preferences: string[]) => set(() => ({ preferences })),
+  preferences: [],
+  setPreferences: (preferences: PreferenceNFT[]) =>
+    set(() => ({ preferences })),
+  addPreference: (preference: PreferenceNFT) =>
+    set((state) => ({ preferences: [...state.preferences, preference] })),
 }));

@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { redis1, redis2 } from "@/utils/db";
 import createRoom from "@/huddle01/createRoom";
-import { useMachingStore } from "@store/matching";
 import { useRouter } from "next/router";
+import { useMachingStore } from "@store/matching";
 
 interface NFTData {
   name: string;
@@ -22,6 +22,7 @@ const About: NextPage = () => {
   }, [selectedCardsList]);
   const { push } = useRouter();
   const { publicKey } = useWallet();
+  const addPreference = useMachingStore((state) => state.addPreference);
 
   const [supportedTokenAddressesMetadata, setSupportedTokenAddressesMetadata] =
     useState<NFTData[]>();
@@ -94,7 +95,13 @@ const About: NextPage = () => {
                 ? "border-red-500 border-4"
                 : "border-cardGray-700 hover:border-gray-700"
             } group overflow-clip`}
-            onClick={() => handleCardSelect(item.collection.address)}
+            onClick={() => {
+              handleCardSelect(item.collection.address)
+              addPreference({
+                address: item.collection.address,
+                imageUri: item.cached_image_uri,
+              })
+            }}
           >
             <div className="relative w-full h-full">
               <Image

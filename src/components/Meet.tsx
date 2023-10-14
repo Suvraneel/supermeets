@@ -6,6 +6,7 @@ import {
   useRoom,
   useVideo,
 } from "@huddle01/react/hooks";
+import { useAppUtils } from "@huddle01/react/app-utils";
 import clsx from "clsx";
 import type { FC } from "react";
 import { useEffect, useRef } from "react";
@@ -46,8 +47,11 @@ const Meet: FC = () => {
   } = useMeetPersistStore();
   const { peers } = usePeers();
   const { me } = useHuddle01();
+  const { changeAvatarUrl } = useAppUtils();
 
   const { push } = useRouter();
+
+  const avatarUrl = useMeetPersistStore((state) => state.avatarUrl);
 
   useEventListener("app:cam-on", async () => {
     toggleCamOff(false);
@@ -112,6 +116,12 @@ const Meet: FC = () => {
       fetchAudioStream(audioInputDevice.deviceId);
     }
   }, [audioInputDevice]);
+
+  useUpdateEffect(() => {
+    if (changeAvatarUrl.isCallable && avatarUrl) {
+      changeAvatarUrl(avatarUrl);
+    }
+  }, [changeAvatarUrl.isCallable, avatarUrl]);
 
   useEventListener("room:me-left", () => {
     push(`/`);
