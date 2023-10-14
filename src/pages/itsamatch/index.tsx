@@ -11,20 +11,21 @@ const ItsAMatch = () => {
           <Realistic />
           <h1 className='text-white text-3xl font-bold'>It&apos;s a Match!</h1>
           <div className="flex justify-evenly items-center w-full h-full relative">
-            <div className="w-1/3 h-96 relative">
+            <div className="w-1/3 aspect-square relative">
               <Image
                 src="/guy.jpg"
                 alt="itsamatch"
                 fill
-                className={`rounded-full ${styles.animate_left_to_center} bg-contain`}              />
+                className={`rounded-full ${styles.animate_left_to_center} bg-cover`}
+                />
             </div>
             <h1 className={`text-8xl font-thin ${styles.stamp}`}>X</h1>
-            <div className="w-1/3 h-96 relative">
+            <div className="w-1/3 aspect-square relative">
               <Image
                 src="/gril.jpg"
                 alt="itsamatch"
                 fill
-                className={`rounded-full ${styles.animate_right_to_center} bg-contain`}
+                className={`rounded-full ${styles.animate_right_to_center} bg-cover`}
               />
             </div>
           </div>
