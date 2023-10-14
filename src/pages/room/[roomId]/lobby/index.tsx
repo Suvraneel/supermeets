@@ -171,6 +171,7 @@ const Lobby = () => {
                       ? `${me.avatarUrl}`
                       : `${avatarURL}`
                   }
+                  loader={({ src }) => src}
                   alt="avatar"
                   width={100}
                   height={100}
