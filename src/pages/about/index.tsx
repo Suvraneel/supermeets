@@ -88,12 +88,12 @@ const About: NextPage = () => {
 
   return (
     <div className='w-full h-full flex flex-col justify-evenly items-center'>
-      <div className="w-full h-full p-10 lg:px-40 flex justify-between items-center pt-32">
+      <div className="w-full h-full p-10 lg:px-40 flex justify-evenly gap-16 items-center pt-32">
         {supportedTokenAddressesMetadata?.map((item: NFTData) => {
           return (
             <div
               key={item.collection.address}
-              className={`w-[20vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border transition-all ${selectedCardsList.includes(item.collection.address)
+              className={`w-[25vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border transition-all ${selectedCardsList.includes(item.collection.address)
                 ? "border-blue-500 border-4 skew-x-6 -skew-y-3 shadow-2xl shadow-blue-700"
                 : "border-cardGray-700 hover:border-gray-700"
                 } group bg-white p-2 pb-5`}
