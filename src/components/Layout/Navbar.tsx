@@ -52,7 +52,7 @@ export default function Navbar() {
               <LogoSquare className='w-5 h-5 relative p-2'/>
               <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block p-2">
                 {/* {process.env.SITE_NAME} */}
-                SuperMeet
+                SuperMeets
               </div>
             </Link>
             {/* {menu.length!=0 && (
