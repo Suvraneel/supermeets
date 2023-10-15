@@ -26,7 +26,7 @@ interface RoomsInterface {
 }
 
 const Lobby = () => {
-  const { initialize, me } = useHuddle01();
+  const { initialize, me, roomState } = useHuddle01();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { query, push } = useRouter();
   const { roomId: queryRoomId } = query;
@@ -61,9 +61,9 @@ const Lobby = () => {
 
   const verifyRoomId = async (roomId: string) => {
     if (publicKey?.toBase58()) {
-      const roomIdData = (
-        (await redis2.get(publicKey?.toBase58())) as RoomsInterface
-      )
+      const roomIdData = (await redis2.get(
+        publicKey?.toBase58()
+      )) as RoomsInterface;
       if (!roomIdData) {
         push("/");
       }
@@ -72,10 +72,10 @@ const Lobby = () => {
 
   useEffect(() => {
     if (roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
-      async () => {
-        await verifyRoomId(roomId);
+      verifyRoomId(roomId);
+      if (roomState === "IDLE") {
+        initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
       }
-      initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
       joinLobby(roomId);
     }
   }, [roomId]);
@@ -162,11 +162,7 @@ const Lobby = () => {
             ) : (
               <div className="h-full w-full flex flex-col gap-4 justify-center items-center">
                 <Image
-                  src={
-                    me.avatarUrl
-                      ? `${me.avatarUrl}`
-                      : `${avatarURL}`
-                  }
+                  src={me.avatarUrl ? `${me.avatarUrl}` : `${avatarURL}`}
                   loader={({ src }) => src}
                   alt="avatar"
                   width={100}
