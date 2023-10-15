@@ -96,7 +96,7 @@ const About: NextPage = () => {
               className={`w-[25vw] aspect-square flex flex-col justify-center items-center relative rounded-lg border transition-all ${selectedCardsList.includes(item.collection.address)
                 ? "border-blue-500 border-4 skew-x-6 -skew-y-3 shadow-2xl shadow-blue-700"
                 : "border-cardGray-700 hover:border-gray-700"
-                } group bg-white p-2`}
+                } group bg-white p-1 md:p-2`}
               onClick={() => {
                 handleCardSelect(item.collection.address)
                 addPreference({
@@ -115,7 +115,7 @@ const About: NextPage = () => {
                   className="group-hover:scale-125 rounded-lg transition-transform duration-75 object-cover"
                 />
               </div>
-              <span className="text-black text-xl bg-white font-bold pt-2">{item.name}</span>
+              <span className="text-black text-sm md:text-xl bg-white font-bold pt-1 md:pt-2">{item.name}</span>
             </div>
           );
         })}
