@@ -46,17 +46,17 @@ const nftCommunityCollection = [
 ];
 
 const matchNFTs = async (req: NextApiRequest, res: NextApiResponse) => {
-  const address = "2pgp7NaXWqycNJ7kaFF9uvs2MQ1hd3dG2Gh27VUUzxcA";
+  // const address = "2pgp7NaXWqycNJ7kaFF9uvs2MQ1hd3dG2Gh27VUUzxcA";
   const { walletAddress } = req.body;
-  const url = "https://api.shyft.to/sol/v1/nft/read_all?network=mainnet-beta&address="+walletAddress;
+  const url = "https://api.shyft.to/sol/v1/nft/read_all?network=mainnet-beta&address=" + walletAddress;
   const response = await fetch(url, {
     headers: {
-      "X-API-KEY": process.env.SHYFT_API_KEY || "",
+      "X-API-KEY": process.env.SHYFT_API_KEY ?? "",
     },
   });
   const data = (await response.json()) as APIData;
   const nfts: NFTData[] = data.result;
-  
+
   // Only return NFTs that are in the community collection
   const nftCommunityCollectionAddresses = nftCommunityCollection.map(
     (nft) => nft.address
@@ -67,7 +67,7 @@ const matchNFTs = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   //remove nfts with same collection address
-  filteredNFTs = filteredNFTs!.filter(
+  filteredNFTs = filteredNFTs.filter(
     (nft: NFTData, index: number, self: NFTData[]) =>
       index === self.findIndex((t) => t.collection.address === nft.collection.address)
   );

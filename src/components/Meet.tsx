@@ -165,7 +165,7 @@ const Meet: FC = () => {
                 alt="avatar"
                 className="mb-16 mt-16 h-32 w-32 rounded-full"
               />
-                <h3 className="text-2xl font-bold text-white">{me.displayName.split(' ', 3).map(part => part.charAt(0).toUpperCase()).join('')}</h3>
+                <h3 className="text-2xl font-bold text-white">{me.displayName.split(' ', 3).map(part => part.charAt(0).toUpperCase()).join('')??""}</h3>
               </div>
             )}
             <div

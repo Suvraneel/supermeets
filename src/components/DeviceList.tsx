@@ -1,6 +1,5 @@
 import { Menu } from '@headlessui/react';
-import clsx from 'clsx';
-import { useTheme } from 'next-themes';
+// import { useTheme } from 'next-themes';
 import type { FC } from 'react';
 
 type DeviceListProps = {
@@ -10,7 +9,7 @@ type DeviceListProps = {
 };
 
 const DeviceList: FC<DeviceListProps> = ({ devices, setDevice }) => {
-  const { resolvedTheme } = useTheme();
+  // const { resolvedTheme } = useTheme();
 
   return (
     <div className="overflow-clip w-full h-full">

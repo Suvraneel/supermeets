@@ -84,7 +84,7 @@ const About: NextPage = () => {
       setSupportedTokenAddressesMetadata(nfts);
     };
     getNFT();
-  }, []);
+  }, [publicKey]);
 
   return (
     <div className='w-full h-full flex flex-col justify-evenly items-center'>

@@ -1,7 +1,5 @@
-import Card from "@components/Card"
-import { swera } from "@fonts"
-import Image from "next/image"
 import Spliner from "@components/Spliner"
+import { swera } from "@fonts"
 import { ArrowRightIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/router"
 

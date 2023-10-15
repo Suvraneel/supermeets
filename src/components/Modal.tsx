@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { BasicIcons } from './BasicIcons';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 
 const Modal = ({ show, onClose, children }: any) => {
     const [isVisible, setIsVisible] = useState(false);

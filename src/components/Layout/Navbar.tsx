@@ -15,26 +15,26 @@ const WalletMultiButtonDynamic = dynamic(
 export default function Navbar() {
 
   const menu = [
-    // {
-    //   title: "Home",
-    //   path: "/",
-    // },
-    // {
-    //   title: "About",
-    //   path: "/about",
-    // },
-    // {
-    //   title: "Room",
-    //   path: "/room",
-    // },
-    // {
-    //   title: "Lobby",
-    //   path: "/lobby",
-    // },
-    // {
-    //   title: "ItsAMatch",
-    //   path: "/itsamatch",
-    // },
+    {
+      title: "Home",
+      path: "/",
+    },
+    {
+      title: "About",
+      path: "/about",
+    },
+    {
+      title: "Room",
+      path: "/room",
+    },
+    {
+      title: "Lobby",
+      path: "/lobby",
+    },
+    {
+      title: "ItsAMatch",
+      path: "/itsamatch",
+    },
   ];
 
   return (
@@ -55,7 +55,7 @@ export default function Navbar() {
                 SuperMeet
               </div>
             </Link>
-            {menu.length!=0 && (
+            {/* {menu.length!=0 && (
               <ul className="hidden gap-6 text-sm md:flex md:items-center">
                 {menu.map((item) => (
                   <li key={item.title}>
@@ -68,7 +68,7 @@ export default function Navbar() {
                   </li>
                 ))}
               </ul>
-            )}
+            )} */}
           </div>
           <div className="flex justify-end md:w-1/3">
             <WalletMultiButtonDynamic />

@@ -10,9 +10,8 @@ const Home = () => {
   useEffect(() => {
     if (!isRoomJoined && query.roomId) {
       push(`/room/${query.roomId}/lobby`);
-      return;
     }
-  }, [query.roomId, isRoomJoined]);
+  }, [query.roomId, isRoomJoined, push]);
 
   return <Meet />;
 };

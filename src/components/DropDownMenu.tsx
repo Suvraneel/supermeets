@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
-import { useTheme } from 'next-themes';
+// import { useTheme } from 'next-themes';
 import type { FC } from 'react';
 import { Fragment, useEffect, useState } from 'react';
 import { useMeetPersistStore } from '@/store/meet';
@@ -30,42 +30,42 @@ const DropDownMenu: FC<DropDownProps> = ({ deviceType }) => {
     MediaDeviceInfo[]
   >([]);
 
-  const { resolvedTheme } = useTheme();
-
-  const listMediaDevices = async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const audioInputDevices = devices.filter(
-        (device) => device.kind === 'audioinput'
-      );
-      const videoDevices = devices.filter(
-        (device) => device.kind === 'videoinput'
-      );
-      const audioOutputDevices = devices.filter(
-        (device) => device.kind === 'audiooutput'
-      );
-
-      setAudioInputDevices(audioInputDevices);
-      setAudioOutputDevices(audioOutputDevices);
-      setVideoDevices(videoDevices);
-
-      if (!videoDevice.deviceId) {
-        setVideoDevice(videoDevices[0]);
-      }
-      if (!audioInputDevice.deviceId) {
-        setAudioInputDevice(audioInputDevices[0]);
-      }
-      if (!audioOutputDevice.deviceId) {
-        setAudioOutputDevice(audioOutputDevices[0]);
-      }
-    } catch (error) {
-      console.error('Error listing media devices:', error);
-    }
-  };
+  // const { resolvedTheme } = useTheme();s
 
   useEffect(() => {
+    const listMediaDevices = async () => {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const audioInputDevices = devices.filter(
+          (device) => device.kind === 'audioinput'
+        );
+        const videoDevices = devices.filter(
+          (device) => device.kind === 'videoinput'
+        );
+        const audioOutputDevices = devices.filter(
+          (device) => device.kind === 'audiooutput'
+        );
+
+        setAudioInputDevices(audioInputDevices);
+        setAudioOutputDevices(audioOutputDevices);
+        setVideoDevices(videoDevices);
+
+        if (!videoDevice.deviceId) {
+          setVideoDevice(videoDevices[0]);
+        }
+        if (!audioInputDevice.deviceId) {
+          setAudioInputDevice(audioInputDevices[0]);
+        }
+        if (!audioOutputDevice.deviceId) {
+          setAudioOutputDevice(audioOutputDevices[0]);
+        }
+      } catch (error) {
+        console.error('Error listing media devices:', error);
+      }
+    };
+
     listMediaDevices();
-  }, []);
+  }, [audioInputDevice.deviceId, audioOutputDevice.deviceId, setAudioInputDevice, setAudioOutputDevice, setVideoDevice, videoDevice.deviceId]);
 
   return (
     <Menu as="div" className="w-full h-full relative inline-block text-left">
@@ -78,8 +78,8 @@ const DropDownMenu: FC<DropDownProps> = ({ deviceType }) => {
           {deviceType == 'video'
             ? videoDevice?.label
             : deviceType == 'audioInput'
-            ? audioInputDevice?.label
-            : audioOutputDevice?.label}
+              ? audioInputDevice?.label
+              : audioOutputDevice?.label}
           <ChevronDownIcon
             className="-mr-1 h-5 w-5 text-white"
             aria-hidden="true"
