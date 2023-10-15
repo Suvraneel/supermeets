@@ -6,17 +6,29 @@ import { useMachingStore } from "@store/matching";
 import { useMeetPersistStore } from "@store/meet";
 import Image from "next/image";
 
+interface PreferenceNFT {
+  imageUri: string;
+  address: string;
+}
+
 interface RoomsInterface {
   roomId: string;
   partner: string | null;
+  pfp?: PreferenceNFT[];
 }
 
 const Loader = () => {
-  const [matchedAddress, setMatchedAddress] = useState("");
+  const {
+    matchedAddress,
+    setMatchedAddress,
+    preferences: selectedPreferences,
+    setMatchedRoomId,
+    setMatchedPFP,
+    matchedPFP,
+  } = useMachingStore();
   const { publicKey } = useWallet();
   const { push } = useRouter();
   const setAvatarUrl = useMeetPersistStore((state) => state.setAvatarUrl);
-  const selectedPreferences = useMachingStore((state) => state.preferences);
 
   const getPreferredMatchNFT = async (preferences: string[]) => {
     let maxPreference: string | null = null;
@@ -34,7 +46,9 @@ const Loader = () => {
   const getMatchedAddress = async (preferences: string[]) => {
     const preferredMatchNFT = await getPreferredMatchNFT(preferences);
     // find imageUrl of the preferredMatchNFT from preferences
-    const imageUrl = selectedPreferences.find((item) => item.address === preferredMatchNFT)?.imageUri;
+    const imageUrl = selectedPreferences.find(
+      (item) => item.address === preferredMatchNFT
+    )?.imageUri;
     if (imageUrl) {
       setAvatarUrl(imageUrl);
     }
@@ -66,7 +80,6 @@ const Loader = () => {
           if (roomPartner) {
             isMatched = true;
 
-
             setMatchedAddress(roomPartner);
 
             console.log("we are matching with", roomPartner);
@@ -77,27 +90,38 @@ const Loader = () => {
 
             await redis1.set(preferredMatchNFT, restAddresses);
 
-            console.log("The addresses in the pool after", restAddresses);
-
             const roomId = await redis2.get(publicKey?.toBase58() as string);
+
+            setMatchedRoomId((roomId as RoomsInterface).roomId);
+
+            const partnerData = await redis2.get(roomPartner);
+
+            // iterate through the partnerPfps and find the one that matches the preferredMatchNFT
+            if (partnerData) {
+              const partnerPfp = (partnerData as RoomsInterface).pfp?.find(
+                (item) => item.address === preferredMatchNFT
+              );
+
+              if (partnerPfp?.imageUri) {
+                console.log("Partner PFP", partnerPfp.imageUri);
+                setMatchedPFP(partnerPfp.imageUri);
+              }
+            }
 
             await redis2.set(roomPartner, {
               roomId: (roomId as RoomsInterface).roomId,
               partner: publicKey?.toBase58(),
+              pfp: imageUrl,
             });
 
             await redis2.set(publicKey?.toBase58() as string, {
               roomId: (roomId as RoomsInterface).roomId,
               partner: roomPartner,
+              pfp: matchedPFP,
             });
 
-            
-
-            push(
-              `/room/${
-                ((await redis2.get(roomPartner)) as RoomsInterface).roomId
-              }`
-            );
+            push(`/room/${(roomId as RoomsInterface).roomId}`);
+            return;
           }
         } else {
           console.log("No available partners");
@@ -134,13 +158,27 @@ const Loader = () => {
   }, []);
 
   return (
-    <div className='h-full w-full flex flex-col justify-evenly items-center mt-20'>
-    <Image width={100} height={90} src={'/loader.gif'} className='w-1/2 aspect-auto' alt='loading' />
-    <div className='w-full h-full flex flex-row justify-center items-center gap-5'>
-        <Image width={10} height={10} src={'/magnifying_glass.gif'} className='w-20 h-20' alt='mag_glass' />
-        <p className='text-4xl font-bold text-white uppercase animate-pulse'>Finding matches...</p>
+    <div className="h-full w-full flex flex-col justify-evenly items-center mt-20">
+      <Image
+        width={100}
+        height={90}
+        src={"/loader.gif"}
+        className="w-1/2 aspect-auto"
+        alt="loading"
+      />
+      <div className="w-full h-full flex flex-row justify-center items-center gap-5">
+        <Image
+          width={10}
+          height={10}
+          src={"/magnifying_glass.gif"}
+          className="w-20 h-20"
+          alt="mag_glass"
+        />
+        <p className="text-4xl font-bold text-white uppercase animate-pulse">
+          Finding matches...
+        </p>
+      </div>
     </div>
-</div>
   );
 };
 

@@ -63,7 +63,7 @@ const matchNFTs = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   //remove nfts with same collection address
-  filteredNFTs = filteredNFTs.filter(
+  filteredNFTs = filteredNFTs?.filter(
     (nft: NFTData, index: number, self: NFTData[]) =>
       index === self.findIndex((t) => t.collection.address === nft.collection.address)
   );

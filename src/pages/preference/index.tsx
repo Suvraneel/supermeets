@@ -61,6 +61,7 @@ const About: NextPage = () => {
       await redis2.set(publicKey?.toBase58(), {
         roomId: roomId,
         partner: null,
+        pfp: Object.values(preferences) // fixed the syntax error here
       });
     }
   };

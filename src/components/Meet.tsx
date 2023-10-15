@@ -128,7 +128,7 @@ const Meet: FC = () => {
     if (setDisplayName.isCallable && displayUserName) {
       setDisplayName(displayUserName);
     }
-  }, [setDisplayName.isCallable]);
+  }, [setDisplayName.isCallable, displayUserName]);
 
   useEventListener("room:me-left", () => {
     push(`/`);
@@ -158,7 +158,7 @@ const Meet: FC = () => {
               <div className="h-full w-full flex flex-col justify-center items-center">
               <Image
                 src={
-                  me.avatarUrl ? `${me.avatarUrl}` : `/default-avatar.svg`
+                  me.avatarUrl.length > 0 ? `${me.avatarUrl}` : `/default-avatar.svg`
                 }
                 width={100}
                 height={100}

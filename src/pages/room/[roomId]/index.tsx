@@ -11,7 +11,7 @@ const Home = () => {
     if (!isRoomJoined && query.roomId) {
       push(`/room/${query.roomId}/lobby`);
     }
-  }, [query.roomId, isRoomJoined, push]);
+  }, [query.roomId, isRoomJoined]);
 
   return <Meet />;
 };

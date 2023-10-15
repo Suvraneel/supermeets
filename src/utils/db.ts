@@ -4,7 +4,7 @@ if (
   !process.env.NEXT_PUBLIC_REDIS1_URL ||
   !process.env.NEXT_PUBLIC_REDIS1_TOKEN ||
   !process.env.NEXT_PUBLIC_REDIS2_URL ||
-  !process.env.NEXT_PUBLIC_REDIS2_TOKEN
+  !process.env.NEXT_PUBLIC_REDIS2_TOKEN 
 ) {
   throw new Error("REDIS_URL or REDIS_TOKEN is null");
 }
