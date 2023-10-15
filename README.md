@@ -1,40 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Supermeets
+
+Welcome to Supermeets!
+
+## What is Supermeets?
+
+Supermeets is an innovative platform designed to foster connections within the crypto community. It's all about bringing crypto enthusiasts, NFT collectors, and blockchain aficionados together through spontaneous video chats. We match users based on the NFTs in their crypto wallets, creating unique opportunities for networking, collaboration, and just plain fun.
+
+### Key Features
+
+- **Crypto Wallet Connection**: Sign in with your Solana wallet to get started.
+
+- **NFT Ownership Detection**: Supermeets detects the NFTs in your wallet and uses them to match you with others.
+
+- **Customizable Matching**: You can filter which NFTs are used for matching based on your preferences.
+
+- **Randomized Matching Algorithm**: Get paired with someone who shares at least one NFT in common with you.
+
+- **Peer-to-Peer Video Chats**: Enjoy decentralized video calls using Huddle01
+
+#### Future Features
+
+- **User Safety**: You can report and block users if needed.
+
+- **Rating System**: Rate other users to improve the matching algorithm for future encounters.
 
 ## Getting Started
 
-First, run the development server:
+1. **Connect Your Wallet**: Sign in with your Solana wallet to detect your NFTs.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Customize Your Matching**: Choose which NFTs to use for matching.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. **Start Meeting**: Get matched with fellow crypto enthusiasts and start connecting.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Contribution
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+We welcome contributors to make Supermeets even more amazing! If you have ideas, feature requests, or bug reports, please open an issue or submit a pull request on our GitHub repository.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Contact
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+If you have questions or need assistance, feel free to reach out to us on [twitter](https://twitter.com/supermeets_xyz).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Let's make the crypto community even stronger with Supermeets! Join us today and start connecting in a whole new way. 🚀🌐🤝
