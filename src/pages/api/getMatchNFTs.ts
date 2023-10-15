@@ -36,10 +36,6 @@ const nftCommunityCollection = [
     address: "6mszaj17KSfVqADrQj3o4W3zoLMTykgmV37W4QadCczK",
   },
   {
-    CollectionName: "Number Degen NFTs",
-    address: "G3YSwhwL7yiKvkrnKgk1jQsQkRj5zcCSF8rfVAGQUpKe"
-  },
-  {
     CollectionName: "SuperMeet NFts",
     address: "95M5oiWiw51ueVwc7TqHjNsiRU4qzd3ubgwHo9jHvRDz"
   }
