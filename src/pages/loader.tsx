@@ -91,8 +91,7 @@ const Loader = () => {
               partner: roomPartner,
             });
 
-            const partnerRoomId = await redis2.get(roomPartner);
-            const myRoomId = await redis2.get(publicKey?.toBase58() as string);
+            
 
             push(
               `/room/${

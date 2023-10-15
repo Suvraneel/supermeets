@@ -93,10 +93,10 @@ const About: NextPage = () => {
           return (
             <div
               key={item.collection.address}
-              className={`w-[25vw] aspect-square flex flex-row justify-center items-center relative rounded-lg border transition-all ${selectedCardsList.includes(item.collection.address)
+              className={`w-[25vw] aspect-square flex flex-col justify-center items-center relative rounded-lg border transition-all ${selectedCardsList.includes(item.collection.address)
                 ? "border-blue-500 border-4 skew-x-6 -skew-y-3 shadow-2xl shadow-blue-700"
                 : "border-cardGray-700 hover:border-gray-700"
-                } group bg-white p-2 pb-5`}
+                } group bg-white p-2`}
               onClick={() => {
                 handleCardSelect(item.collection.address)
                 addPreference({
@@ -112,9 +112,10 @@ const About: NextPage = () => {
                   loader={({ src }) => src}
                   fill
                   loading="lazy"
-                  className="group-hover:scale-125 transition-transform duration-75 object-cover"
+                  className="group-hover:scale-125 rounded-lg transition-transform duration-75 object-cover"
                 />
               </div>
+              <span className="text-black text-xl bg-white font-bold pt-2">{item.name}</span>
             </div>
           );
         })}
