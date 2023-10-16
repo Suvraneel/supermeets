@@ -26,7 +26,7 @@ interface RoomsInterface {
 }
 
 const Lobby = () => {
-  const { initialize, me } = useHuddle01();
+  const { initialize, me, roomState } = useHuddle01();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { query, push } = useRouter();
   const { roomId: queryRoomId } = query;
@@ -58,24 +58,12 @@ const Lobby = () => {
       setRoomId(queryRoomId as string);
     }
   }, [queryRoomId]);
-
-  const verifyRoomId = async (roomId: string) => {
-    if (publicKey?.toBase58()) {
-      const roomIdData = (
-        (await redis2.get(publicKey?.toBase58())) as RoomsInterface
-      )
-      if (!roomIdData) {
-        push("/");
-      }
-    }
-  };
-
+  
   useEffect(() => {
     if (roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
-      async () => {
-        await verifyRoomId(roomId);
+      if (roomState === "IDLE") {
+        initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
       }
-      initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
       joinLobby(roomId);
     }
   }, [roomId]);
@@ -103,26 +91,6 @@ const Lobby = () => {
   useEventListener("app:mic-off", async () => {
     toggleMicMuted(true);
   });
-
-  //   useEffect(() => {
-  //     const profilePicture = currentProfile?.picture;
-  //     console.log("profilePicture", profilePicture);
-  //     if (profilePicture?.__typename == "MediaSet") {
-  //       const avatarUrl = profilePicture?.original?.url;
-  //       console.log("avatarURL", avatarUrl);
-  //       if (avatarUrl && changeAvatarUrl.isCallable) {
-  //         changeAvatarUrl(avatarUrl);
-  //       }
-  //     } else if (profilePicture?.__typename == "NftImage") {
-  //       const avatarUrl = profilePicture?.uri;
-  //       console.log("avatarURL", avatarUrl);
-  //       if (avatarUrl && changeAvatarUrl.isCallable) {
-  //         changeAvatarUrl(avatarUrl);
-  //       }
-  //     } else {
-  //       console.log("Not Found");
-  //     }
-  //   }, [changeAvatarUrl.isCallable]);
 
   useUpdateEffect(() => {
     if (!isCamOff) {
@@ -162,23 +130,13 @@ const Lobby = () => {
             ) : (
               <div className="h-full w-full flex flex-col gap-4 justify-center items-center">
                 <Image
-                  src={
-                    me.avatarUrl
-                      ? `${me.avatarUrl}`
-                      : `${avatarURL}`
-                  }
+                  src={me.avatarUrl ? `${me.avatarUrl}` : `${avatarURL}`}
                   loader={({ src }) => src}
                   alt="avatar"
                   width={100}
                   height={100}
                   className="h-24 w-24 rounded-full"
                 />
-                <h3 className="text-2xl font-bold text-white">
-                  {displayUserName
-                    .split(" ", 3)
-                    .map((part) => part.charAt(0).toUpperCase())
-                    .join("")}
-                </h3>
               </div>
             )}
           </div>
