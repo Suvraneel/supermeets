@@ -162,17 +162,17 @@ const Home = () => {
     }
   }, [audioInputDevice]);
 
-  // useEffect(() => {
-  //   if (changeAvatarUrl.isCallable && avatarUrl && isRoomJoined) {
-  //     changeAvatarUrl(avatarUrl);
-  //   }
-  // }, [changeAvatarUrl.isCallable, isRoomJoined]);
+  useEffect(() => {
+    if (changeAvatarUrl.isCallable && avatarUrl && isRoomJoined) {
+      changeAvatarUrl(avatarUrl);
+    }
+  }, [changeAvatarUrl.isCallable, isRoomJoined]);
 
-  // useEffect(() => {
-  //   if (setDisplayName.isCallable && displayUserName && me.displayName.length === 0) {
-  //     setDisplayName(displayUserName);
-  //   }
-  // }, [setDisplayName.isCallable]);
+  useEffect(() => {
+    if (setDisplayName.isCallable && displayUserName) {
+      setDisplayName(displayUserName);
+    }
+  }, [setDisplayName.isCallable]);
 
   useEventListener("room:me-left", () => {
     push(`/`);
