@@ -58,21 +58,9 @@ const Lobby = () => {
       setRoomId(queryRoomId as string);
     }
   }, [queryRoomId]);
-
-  const verifyRoomId = async (roomId: string) => {
-    if (publicKey?.toBase58()) {
-      const roomIdData = (await redis2.get(
-        publicKey?.toBase58()
-      )) as RoomsInterface;
-      if (!roomIdData) {
-        push("/");
-      }
-    }
-  };
-
+  
   useEffect(() => {
     if (roomId && process.env.NEXT_PUBLIC_PROJECT_ID) {
-      verifyRoomId(roomId);
       if (roomState === "IDLE") {
         initialize(process.env.NEXT_PUBLIC_PROJECT_ID);
       }
@@ -103,26 +91,6 @@ const Lobby = () => {
   useEventListener("app:mic-off", async () => {
     toggleMicMuted(true);
   });
-
-  //   useEffect(() => {
-  //     const profilePicture = currentProfile?.picture;
-  //     console.log("profilePicture", profilePicture);
-  //     if (profilePicture?.__typename == "MediaSet") {
-  //       const avatarUrl = profilePicture?.original?.url;
-  //       console.log("avatarURL", avatarUrl);
-  //       if (avatarUrl && changeAvatarUrl.isCallable) {
-  //         changeAvatarUrl(avatarUrl);
-  //       }
-  //     } else if (profilePicture?.__typename == "NftImage") {
-  //       const avatarUrl = profilePicture?.uri;
-  //       console.log("avatarURL", avatarUrl);
-  //       if (avatarUrl && changeAvatarUrl.isCallable) {
-  //         changeAvatarUrl(avatarUrl);
-  //       }
-  //     } else {
-  //       console.log("Not Found");
-  //     }
-  //   }, [changeAvatarUrl.isCallable]);
 
   useUpdateEffect(() => {
     if (!isCamOff) {
@@ -169,12 +137,6 @@ const Lobby = () => {
                   height={100}
                   className="h-24 w-24 rounded-full"
                 />
-                <h3 className="text-2xl font-bold text-white">
-                  {displayUserName
-                    .split(" ", 3)
-                    .map((part) => part.charAt(0).toUpperCase())
-                    .join("")}
-                </h3>
               </div>
             )}
           </div>

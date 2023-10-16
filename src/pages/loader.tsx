@@ -14,7 +14,6 @@ interface PreferenceNFT {
 interface RoomsInterface {
   roomId: string;
   partner: string | null;
-  pfp?: PreferenceNFT[];
 }
 
 const Loader = () => {
@@ -61,7 +60,10 @@ const Loader = () => {
           publicKey?.toBase58() as string
         )) as RoomsInterface | null;
 
-        if (checkIfRoomExists?.partner !== null) {
+        if (
+          checkIfRoomExists?.partner !== null &&
+          checkIfRoomExists?.roomId !== null
+        ) {
           push(`/room/${checkIfRoomExists?.roomId}`);
           return;
         }
@@ -94,20 +96,6 @@ const Loader = () => {
 
             setMatchedRoomId((roomId as RoomsInterface).roomId);
 
-            const partnerData = await redis2.get(roomPartner);
-
-            // iterate through the partnerPfps and find the one that matches the preferredMatchNFT
-            if (partnerData) {
-              const partnerPfp = (partnerData as RoomsInterface).pfp?.find(
-                (item) => item.address === preferredMatchNFT
-              );
-
-              if (partnerPfp?.imageUri) {
-                console.log("Partner PFP", partnerPfp.imageUri);
-                setMatchedPFP(partnerPfp.imageUri);
-              }
-            }
-
             await redis2.set(roomPartner, {
               roomId: (roomId as RoomsInterface).roomId,
               partner: publicKey?.toBase58(),
@@ -120,8 +108,10 @@ const Loader = () => {
               pfp: matchedPFP,
             });
 
-            push(`/room/${(roomId as RoomsInterface).roomId}`);
-            return;
+            if ((roomId as RoomsInterface).roomId !== null) {
+              push(`/room/${(roomId as RoomsInterface).roomId}`);
+              return;
+            }
           }
         } else {
           console.log("No available partners");

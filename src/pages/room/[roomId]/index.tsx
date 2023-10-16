@@ -11,23 +11,24 @@ import {
 import { useAppUtils } from "@huddle01/react/app-utils";
 import clsx from "clsx";
 import { useMeetPersistStore } from "@/store/meet";
-import { useUpdateEffect } from "usehooks-ts";
 
 import AudioElem from "@components/Audio";
 import { BasicIcons } from "@components/BasicIcons";
 import SwitchDeviceMenu from "@components/SwitchDeviceMenu";
 import VideoElem from "@components/Video";
 import Image from "next/image";
+import { redis2 } from "@utils/db";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type IRoleEnum =
-  | 'host'
-  | 'coHost'
-  | 'moderator'
-  | 'speaker'
-  | 'listener'
-  | 'peer';
+  | "host"
+  | "coHost"
+  | "moderator"
+  | "speaker"
+  | "listener"
+  | "peer";
 
-export interface IPeer {
+interface IPeer {
   peerId: string;
   role: IRoleEnum;
   mic: MediaStreamTrack | null;
@@ -36,10 +37,15 @@ export interface IPeer {
   avatarUrl: string;
 }
 
+interface roomData {
+  roomId: string | null;
+  partner: string | null;
+}
+
 const Home = () => {
   const { isRoomJoined } = useRoom();
   const { push, query } = useRouter();
-
+  const { publicKey } = useWallet();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { leaveRoom } = useRoom();
   const {
@@ -71,6 +77,13 @@ const Home = () => {
   const avatarUrl = useMeetPersistStore((state) => state.avatarUrl);
   const displayUserName = useMeetPersistStore((state) => state.displayName);
 
+  useEffect(() => {
+    if (!isRoomJoined && query.roomId) {
+      push(`/room/${query.roomId}/lobby`);
+      return;
+    }
+  }, [query.roomId, isRoomJoined]);
+
   useEventListener("app:cam-on", async () => {
     toggleCamOff(false);
     produceVideo(camStream);
@@ -93,13 +106,19 @@ const Home = () => {
     stopProducingAudio();
   });
 
-  useEventListener("room:me-left", () => {
+  useEventListener("room:me-left", async () => {
+    let getRecord = (await redis2.get(
+      publicKey?.toBase58() as string
+    )) as roomData;
+    getRecord.partner = null;
+    getRecord.roomId = null;
+    await redis2.set(publicKey?.toBase58() as string, getRecord);
     push(`/`);
   });
 
   useEventListener("room:peer-left", () => {
     push(`/`);
-  })
+  });
 
   useEffect(() => {
     if (camStream && videoRef.current) {
@@ -129,14 +148,14 @@ const Home = () => {
     }
   }, [micStream]);
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     if (!isCamOff) {
       stopVideoStream();
       fetchVideoStream(videoDevice.deviceId);
     }
   }, [videoDevice]);
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     if (!isMicMuted) {
       stopAudioStream();
       fetchAudioStream(audioInputDevice.deviceId);
@@ -144,22 +163,16 @@ const Home = () => {
   }, [audioInputDevice]);
 
   useEffect(() => {
-    if (changeAvatarUrl.isCallable && avatarUrl) {
+    if (changeAvatarUrl.isCallable && avatarUrl && me.avatarUrl.length === 0) {
       changeAvatarUrl(avatarUrl);
     }
-  }, [changeAvatarUrl.isCallable, avatarUrl]);
+  }, [changeAvatarUrl.isCallable]);
 
   useEffect(() => {
-    if (setDisplayName.isCallable && displayUserName) {
+    if (setDisplayName.isCallable && displayUserName && me.displayName.length === 0) {
       setDisplayName(displayUserName);
     }
-  }, [setDisplayName.isCallable, displayUserName]);
-
-  useEffect(() => {
-    if (!isRoomJoined && query.roomId) {
-      push(`/room/${query.roomId}/lobby`);
-    }
-  }, [query.roomId, isRoomJoined]);
+  }, [setDisplayName.isCallable]);
 
   useEventListener("room:me-left", () => {
     push(`/`);
@@ -199,12 +212,6 @@ const Home = () => {
                   alt="avatar"
                   className="mb-16 mt-16 h-32 w-32 rounded-full"
                 />
-                 <h3 className="text-2xl font-bold text-white">
-                      {me.displayName
-                        .split(" ", 3)
-                        .map((part) => part.charAt(0).toUpperCase())
-                        .join("")}
-                    </h3>
               </div>
             )}
             <div className="bg-black text-slate-100 absolute bottom-1 left-1 rounded-md py-1 px-2 font-lg flex gap-2">
@@ -213,7 +220,8 @@ const Home = () => {
             </div>
           </div>
 
-          {Object.values(peers).map(({ cam, peerId, mic, displayName, avatarUrl }) => (
+          {Object.values(peers).map(
+            ({ cam, peerId, mic, displayName, avatarUrl }) => (
               <div
                 key={peerId}
                 className="relative flex h-[60vh] w-[40vw] flex-shrink-0 items-center justify-center rounded-lg border border-zinc-800 bg-transparent"
@@ -231,12 +239,6 @@ const Home = () => {
                       alt="avatar"
                       className="mb-16 mt-16 h-32 w-32 rounded-full"
                     />
-                    <h3 className="text-2xl font-bold text-white">
-                      {displayName
-                        .split(" ", 3)
-                        .map((part) => part.charAt(0).toUpperCase())
-                        .join("")}
-                    </h3>
                   </div>
                 )}
                 {mic && <AudioElem track={mic} key={peerId} />}
@@ -245,7 +247,8 @@ const Home = () => {
                   {BasicIcons.ping}
                 </div>
               </div>
-            ))}
+            )
+          )}
         </div>
       </div>
       <div className="flex items-center justify-center self-stretch">
