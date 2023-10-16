@@ -108,6 +108,8 @@ const Loader = () => {
               pfp: matchedPFP,
             });
 
+            console.log("We are still here");
+
             if ((roomId as RoomsInterface).roomId !== null) {
               push(`/room/${(roomId as RoomsInterface).roomId}`);
               return;

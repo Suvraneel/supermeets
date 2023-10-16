@@ -168,11 +168,11 @@ const Home = () => {
   //   }
   // }, [changeAvatarUrl.isCallable, isRoomJoined]);
 
-  // useEffect(() => {
-  //   if (setDisplayName.isCallable && displayUserName && me.displayName.length === 0) {
-  //     setDisplayName(displayUserName);
-  //   }
-  // }, [setDisplayName.isCallable]);
+  useEffect(() => {
+    if (setDisplayName.isCallable && displayUserName && me.displayName.length === 0) {
+      setDisplayName(displayUserName);
+    }
+  }, [setDisplayName.isCallable]);
 
   useEventListener("room:me-left", () => {
     push(`/`);
@@ -201,11 +201,7 @@ const Home = () => {
             ) : (
               <div className="h-full w-full flex flex-col justify-center items-center">
                 <Image
-                  src={
-                    me.avatarUrl.length > 0
-                      ? `${me.avatarUrl}`
-                      : `/default-avatar.svg`
-                  }
+                  src='/4.png'
                   loader={({ src }) => src}
                   width={100}
                   height={100}
