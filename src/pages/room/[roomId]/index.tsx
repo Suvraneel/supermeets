@@ -113,11 +113,11 @@ const Home = () => {
     getRecord.partner = null;
     getRecord.roomId = null;
     await redis2.set(publicKey?.toBase58() as string, getRecord);
-    push(`/`);
+    window.location.href = "/";
   });
 
   useEventListener("room:peer-left", () => {
-    push(`/`);
+    window.location.href = "/";
   });
 
   useEffect(() => {
@@ -168,11 +168,11 @@ const Home = () => {
   //   }
   // }, [changeAvatarUrl.isCallable, isRoomJoined]);
 
-  useEffect(() => {
-    if (setDisplayName.isCallable && displayUserName && me.displayName.length === 0) {
-      setDisplayName(displayUserName);
-    }
-  }, [setDisplayName.isCallable]);
+  // useEffect(() => {
+  //   if (setDisplayName.isCallable && displayUserName && me.displayName.length === 0) {
+  //     setDisplayName(displayUserName);
+  //   }
+  // }, [setDisplayName.isCallable]);
 
   useEventListener("room:me-left", () => {
     push(`/`);
