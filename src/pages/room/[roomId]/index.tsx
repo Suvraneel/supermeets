@@ -203,6 +203,7 @@ const Home = () => {
                 <Image
                   src='/4.png'
                   loader={({ src }) => src}
+                  unoptimized
                   width={100}
                   height={100}
                   alt="avatar"
